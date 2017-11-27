@@ -1,3 +1,5 @@
+//import {apiKey,newsBlock} from './config';
+
 class News {
     /**
      * Inits instance
@@ -7,21 +9,25 @@ class News {
         this.BLOCK = node;
         this.NEWS_BLOCK = this.BLOCK.querySelector('.news-block');
         this.GET_ALL_CHANELL_BUTTON = this.BLOCK.querySelector('.sources-block');
-        let that = this;
-        this.GET_ALL_CHANELL_BUTTON.addEventListener('click', function(e) {
+        this.GET_ALL_CHANELL_BUTTON.addEventListener('click', (e)=> {
             let target = e.target;
             if (target.classList.contains('source-list-img')) {
-                this.SOURCE = target.dataset.chanel;
-                that.sendRequest(this.SOURCE);
+                let source = target.dataset.chanel;
+                this.sendRequest(source);
             }
         });
+        //console.log(apiKey);
     };
+    
     sendRequest(source) {
-        var url = this.buildUrl(source);
-        var req = new Request(url);
-        fetch(url).then((response) => this.parseJSON(response)).then((data) => this.parseData(data)).then((nodes) => this.render({
-            nodes
-        })).catch((err) => console.log(err));
+        let url = this.buildUrl(source);
+        fetch(url).
+        then((response) => this.parseJSON(response)).
+        then((data) => this.parseData(data)).
+        then((nodes) => this.render({
+                nodes
+        })).
+        catch((err) => console.log(err));
     };
     /**
      * Parses data from response
@@ -31,6 +37,7 @@ class News {
     parseJSON(data) {
         return data.json();
     };
+    
     /**
      * Renders result to DOM
      * @param stringNodes {String} - assembled news items
@@ -38,20 +45,19 @@ class News {
     render({
         nodes: stringNodes
     }) {
-        this.NEWS_BLOCK.innerHTML = '';
-        stringNodes.map((el) => this.NEWS_BLOCK.insertAdjacentHTML('afterbegin', el));
+         stringNodes.map((el) => this.NEWS_BLOCK.insertAdjacentHTML('afterbegin', el));
     };
+    
     parseData(data) {
         return data.articles.map((item) => {
             const {
                 urlToImage,
-                publishedAt,
                 author,
                 title,
                 description,
                 url
             } = item;
-            const newsCard = `
+           return `
                 <div class="news-list-item">
                     <img class="news-list-item-img" src="${urlToImage}" alt="News Article Image">
                     <div class="news-list-item-wrapper">
@@ -66,19 +72,22 @@ class News {
                     </div>
                 </div>
               `;
-            return newsCard;
+            
         });
     };
+    
     buildUrl(source) {
         if (source && source.length > 0) {
             return `https://newsapi.org/v2/top-headlines?sources=${source}&apiKey=8eef20059fff4d46b5a8712e64d166f6`
         }
     };
 };
-$(document).ready(function(e) {
+
+document.addEventListener( 'DOMContentLoaded', function () {
     let newsBlock = document.querySelector('.content');
     let newsInstance = new News();
     if (newsBlock) {
         newsInstance.init(newsBlock);
     }
-});
+}, false );
+

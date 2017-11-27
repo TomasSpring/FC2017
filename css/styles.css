@@ -4,11 +4,11 @@ body {
     padding: 0;
     margin: 0;
 }
-header {
+.header {
     background-color: #03A9F4;
     padding: 14px;
 }
-header h1 {
+.header h1 {
     color: #FFF;
 }
 .content .sources-block ul {
@@ -19,6 +19,12 @@ header h1 {
 .content .sources-block li {
     text-align: center;
 }
+
+.content .source-list-img {
+    width: 120px;
+    height: 120px;
+}
+
 .content .source-list-img:hover {
     box-shadow: 0 -4px 8px 0 rgba(0, 0, 0, 0.18);
     cursor: pointer;
@@ -45,6 +51,7 @@ header h1 {
     height: 200px;
     width: 200px;
     align-self: center;
+    object-fit: contain
 }
 .news-list-item-wrapper {
     padding-left: 20px;
