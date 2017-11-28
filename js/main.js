@@ -1,4 +1,8 @@
-//import {apiKey,newsBlock} from './config';
+//import {API_KEY,URL,ROOT_NODE} from './config';
+
+const API_KEY = `8eef20059fff4d46b5a8712e64d166f6`;
+const URL = `https://newsapi.org/v2/top-headlines?sources=`;
+const ROOT_NODE = document.querySelector('.content');
 
 class News {
     /**
@@ -6,9 +10,8 @@ class News {
      * @param node - DOM node to instantiate class
      */
     init(node) {
-        this.BLOCK = node;
-        this.NEWS_BLOCK = this.BLOCK.querySelector('.news-block');
-        this.GET_ALL_CHANELL_BUTTON = this.BLOCK.querySelector('.sources-block');
+        this.NEWS_BLOCK = ROOT_NODE.querySelector('.news-block');
+        this.GET_ALL_CHANELL_BUTTON = ROOT_NODE.querySelector('.sources-block');
         this.GET_ALL_CHANELL_BUTTON.addEventListener('click', (e)=> {
             let target = e.target;
             if (target.classList.contains('source-list-img')) {
@@ -16,9 +19,12 @@ class News {
                 this.sendRequest(source);
             }
         });
-        //console.log(apiKey);
     };
     
+    /**
+     * Sends fetch request
+     * @param source {String} - news source
+     */
     sendRequest(source) {
         let url = this.buildUrl(source);
         fetch(url).
@@ -29,6 +35,7 @@ class News {
         })).
         catch((err) => console.log(err));
     };
+    
     /**
      * Parses data from response
      * @param data {Object} - data from API
@@ -48,6 +55,11 @@ class News {
          stringNodes.map((el) => this.NEWS_BLOCK.insertAdjacentHTML('afterbegin', el));
     };
     
+    /**
+     * Parses data from response
+     * @param data {Object} - data from API
+     * @returns {Array|*|{}}
+     */
     parseData(data) {
         return data.articles.map((item) => {
             const {
@@ -76,18 +88,20 @@ class News {
         });
     };
     
+     /**
+     * Builds url to make fetch request
+     * @param source {String} - news source
+     * @returns {string} - url
+     */
     buildUrl(source) {
         if (source && source.length > 0) {
-            return `https://newsapi.org/v2/top-headlines?sources=${source}&apiKey=8eef20059fff4d46b5a8712e64d166f6`
+            return `${URL}${source}&apiKey=${API_KEY}`
         }
     };
 };
 
 document.addEventListener( 'DOMContentLoaded', function () {
-    let newsBlock = document.querySelector('.content');
     let newsInstance = new News();
-    if (newsBlock) {
-        newsInstance.init(newsBlock);
-    }
+    newsInstance.init(ROOT_NODE);
 }, false );
 
